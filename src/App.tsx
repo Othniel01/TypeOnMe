@@ -44,7 +44,7 @@ function App() {
     <>
       {" "}
       <ShortcutsListener />
-      <div className="bg-[#f2f2f2] relative w-full h-screen">
+      <div className="bg-[#f2f2f2] dark:bg-[#1c1c22f2] relative w-full h-screen">
         <NavBar />
         <div className="absolute">
           <CommandPalette />
