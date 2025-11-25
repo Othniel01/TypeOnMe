@@ -45,7 +45,7 @@ export function CommandPalette() {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="w-[600px] p-0">
+      <DialogContent className="w-[410px] p-0">
         <Command shouldFilter={false}>
           <CommandInput
             placeholder="Search notes or type @ for commands..."
@@ -77,13 +77,18 @@ export function CommandPalette() {
                   )}
                 </div>
 
-                {cmd.id.startsWith("note_") && (
+                {cmd.id.startsWith("note_") && notes.length > 1 && (
                   <button
                     className="ml-2 px-2 py-1 text-xs bg-red-500 text-white rounded"
-                    onClick={(e) => {
+                    onClick={async (e) => {
                       e.stopPropagation();
                       const noteId = cmd.id.replace("note_", "");
-                      deleteNote(noteId);
+
+                      await deleteNote(noteId);
+
+                      if (useNotesStore.getState().notes.length === 0) {
+                        await useNotesStore.getState().addNote();
+                      }
                     }}
                   >
                     Delete

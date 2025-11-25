@@ -13,7 +13,10 @@ export type Note = {
 type NotesStore = {
   notes: Note[];
   selectedNoteId: string | null;
-  addNote: () => Promise<string>;
+  addNote: (data?: {
+    title?: string;
+    content?: JSONContent;
+  }) => Promise<string>;
   updateNote: (id: string, content: JSONContent) => Promise<void>;
   selectNote: (id: string) => void;
   deleteNote: (id: string) => Promise<void>;
@@ -32,12 +35,12 @@ export const useNotesStore = create<NotesStore>((set, get) => ({
     }
   },
 
-  addNote: async () => {
+  addNote: async (data?: { title?: string; content?: JSONContent }) => {
     const id = crypto.randomUUID();
     const newNote: Note = {
       id,
-      title: "Untitled Note",
-      content: EMPTY_DOC,
+      title: data?.title ?? "Untitled Note",
+      content: data?.content ?? EMPTY_DOC,
       updatedAt: Date.now(),
     };
     await db.notes.add(newNote);
@@ -87,6 +90,29 @@ export const useNotesStore = create<NotesStore>((set, get) => ({
           ? state.notes[0]?.id || null
           : state.selectedNoteId,
     }));
+  },
+
+  deleteCurrentNote: async () => {
+    const state = get();
+    if (!state.selectedNoteId) return;
+
+    await state.deleteNote(state.selectedNoteId);
+  },
+
+  nextNote: () => {
+    const state = get();
+    const idx = state.notes.findIndex((n) => n.id === state.selectedNoteId);
+    if (idx < state.notes.length - 1) {
+      state.selectNote(state.notes[idx + 1].id);
+    }
+  },
+
+  prevNote: () => {
+    const state = get();
+    const idx = state.notes.findIndex((n) => n.id === state.selectedNoteId);
+    if (idx > 0) {
+      state.selectNote(state.notes[idx - 1].id);
+    }
   },
 
   selectNote: (id) => set({ selectedNoteId: id }),

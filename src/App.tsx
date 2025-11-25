@@ -1,4 +1,3 @@
-// App.tsx
 import { useEffect } from "react";
 import NavBar from "@/components/NavBar";
 import NoteEditor from "@/features/editor/components/NoteEditor";
@@ -6,6 +5,7 @@ import { useNotesStore } from "@/store/useNotesStore";
 import { EMPTY_DOC } from "@/lib/constants";
 import { CommandPalette } from "@/components/CommandPallete";
 import "./styles/global.css";
+import { ShortcutsListener } from "@/core/shortcuts/ShortcutListener";
 
 function App() {
   const notes = useNotesStore((s) => s.notes);
@@ -43,6 +43,7 @@ function App() {
   return (
     <>
       {" "}
+      <ShortcutsListener />
       <div className="bg-[#f2f2f2] relative w-full h-screen">
         <NavBar />
         <div className="absolute">
