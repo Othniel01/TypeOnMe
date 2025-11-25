@@ -45,7 +45,7 @@ export function CommandPalette() {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="w-[410px] p-0">
+      <DialogContent className="w-full md:w-[410px] p-0">
         <Command shouldFilter={false}>
           <CommandInput
             placeholder="Search notes or type @ for commands..."

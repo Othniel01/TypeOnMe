@@ -14,12 +14,12 @@ import {
   getCommands,
   type CommandItem as CmdItem,
 } from "@/core/commands/commands";
+import { ThemeToggle } from "./ThemeToggle";
 
 export function DropDown() {
   const addNote = useNotesStore((s) => s.addNote);
   const notes = useNotesStore((s) => s.notes);
 
-  // Get commands for "@" so we can reuse them
   const commands: CmdItem[] = getCommands("@", notes);
 
   const handleCommand = (id: string) => {
@@ -75,12 +75,15 @@ export function DropDown() {
         <DropdownMenuSeparator />
 
         <DropdownMenuGroup>
-          <DropdownMenuItem className="cursor-pointer">
-            <a target="blank" href="https://github.com/Othniel01/TypeOnMe">
+          <a target="blank" href="https://github.com/Othniel01/TypeOnMe">
+            <DropdownMenuItem className="cursor-pointer">
               Github
-            </a>
+            </DropdownMenuItem>
+          </a>
+          {/* <DropdownMenuItem className="cursor-pointer">Help</DropdownMenuItem> */}
+          <DropdownMenuItem>
+            <ThemeToggle />
           </DropdownMenuItem>
-          <DropdownMenuItem className="cursor-pointer">Help</DropdownMenuItem>
         </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>
