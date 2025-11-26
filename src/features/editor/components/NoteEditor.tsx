@@ -25,7 +25,7 @@ export default function NoteEditor({ value, onChange }: Props) {
     <EditorProvider
       content={value}
       onUpdate={handleUpdate}
-      placeholder="Start typing..."
+      placeholder="Click Here & Start typing..."
       className="w-full h-full overflow-y-auto"
     >
       <EditorFloatingMenu>
