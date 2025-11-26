@@ -1,78 +1,96 @@
-# TypeOnMe: A Powerful Textarea
+# 📝  TypeOnMe: A Powerful Stupid Simple Unobtrusive Textarea
 
 <img width="1919" height="911" alt="image" src="https://github.com/user-attachments/assets/01cc15fd-4dd9-4443-b0be-7161e5897715" />
 
+## How to Use
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+TypeOnMe is designed to be simple, fast, and unobtrusive. Everything happens locally in your browser with automatic saving.
+The most important command to know is ```Ctrl + Shift + F```
 
-Currently, two official plugins are available:
+#### Creating Notes
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+* Press ```Alt + N``` or select New from settings or the command menu.
 
-## React Compiler
+* A new note is created instantly and becomes the active note.
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+* Your notes are saved automatically as you type.
 
-Note: This will impact Vite dev & build performances.
+#### Switching Between Notes
 
-## Expanding the ESLint configuration
+* Use the arrow keys with shortcuts:
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+    * ```Alt + ArrowUp``` – Move to the previous note.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+    * ```Alt + ArrowDown``` – Move to the next note.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+* You can also select a note through the Command Palette by searching its title.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+#### Editing Notes
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+* Type inside the editor as you would in any text editor.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+* Formatting is powered by Tiptap and is saved automatically.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+* Each note has a unique ID and persistent content stored locally (IndexedDB (Dexie.js)).
+
+#### Using the Command Palette
+
+Open the command palette with ```Ctrl + Shift + F``` (or ```Cmd + Shift + F``` on macOS).
+
+Inside the palette you can:
+
+* Search for notes by title.
+
+* Create a new note.
+
+* Delete a note.
+
+* Run backup, import, and export operations.
+
+* Jump directly to any note.
+
+Selecting a command will close the palette and execute the action immediately.
+
+#### Importing and Exporting Notes
+
+Export:
+
+* Press ```Ctrl + E``` or select "Export" from the dropdown menu.
+
+* A JSON file containing the current note or notes will download automatically.
+
+Backup (all notes):
+
+* Press ```Ctrl + Shift + B``` or select "Backup" from the dropdown.
+
+* A complete JSON backup of the entire local database will be downloaded.
+
+Import:
+
+* Press ```Ctrl + I``` or choose "Import" from the dropdown.
+
+* Upload a JSON file previously exported from the app.
+
+* Notes are merged safely without overwriting existing IDs.
+
+#### Deleting Notes
+
+* Notes can only be deleted through the Command Palette.
+
+* The delete button appears only when there are more than one note.
+
+* If there is exactly one note, delete is disabled to prevent an empty state loop.
+
+* When deleting a note, the next or previous available note becomes active.
+
+#### Theme Selection
+
+* Theme automatically follows system settings on the first visit.
+
+* You can toggle between light and dark theme from the dropdown menu.
+
+* The selected theme is saved locally and applied instantly.
+
+<img width="1920" height="899" alt="Screenshot (54)" src="https://github.com/user-attachments/assets/b0a5f90d-6ea8-42f4-bc70-3011e30fd2f4" />
+<img width="1917" height="912" alt="image" src="https://github.com/user-attachments/assets/338abe17-6c85-43b3-a764-2c877dcb14c6" />
+
