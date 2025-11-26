@@ -1388,26 +1388,22 @@ export const EditorLinkSelector = ({
 
 export type EditorTableMenuProps = {
   children: ReactNode;
+  shouldShow?: ({ editor }: { editor: unknown }) => boolean;
 };
 
-export const EditorTableMenu = ({ children }: EditorTableMenuProps) => {
+export const EditorTableMenu = ({
+  children,
+  shouldShow,
+}: EditorTableMenuProps) => {
   const { editor } = useCurrentEditor();
 
-  if (!editor) {
-    return null;
-  }
+  if (!editor) return null;
 
   const isActive = editor.isActive("table");
 
-  return (
-    <div
-      className={cn({
-        hidden: !isActive,
-      })}
-    >
-      {children}
-    </div>
-  );
+  const visible = shouldShow ? shouldShow({ editor }) : isActive;
+
+  return <div className={cn({ hidden: !visible })}>{children}</div>;
 };
 
 export type EditorTableGlobalMenuProps = {
@@ -1421,49 +1417,52 @@ export const EditorTableGlobalMenu = ({
   const [top, setTop] = useState(0);
   const [left, setLeft] = useState(0);
 
+  const isActive = editor?.isActive("table");
+
   useEffect(() => {
-    if (!editor) {
-      return;
-    }
+    if (!editor) return;
 
-    editor.on("selectionUpdate", () => {
+    const updatePosition = () => {
       const selection = window.getSelection();
-
-      if (!selection) {
+      if (!selection?.rangeCount) {
+        setTop(0);
+        setLeft(0);
         return;
       }
 
       const range = selection.getRangeAt(0);
-      let startContainer = range.startContainer as HTMLElement | string;
+      const el =
+        range.startContainer instanceof HTMLElement
+          ? range.startContainer
+          : range.startContainer.parentElement;
 
-      if (!(startContainer instanceof HTMLElement)) {
-        startContainer = range.startContainer.parentElement as HTMLElement;
-      }
-
-      const tableNode = startContainer.closest("table");
-
-      if (!tableNode) {
+      const table = el?.closest("table");
+      if (!table) {
+        setTop(0);
+        setLeft(0);
         return;
       }
 
-      const tableRect = tableNode.getBoundingClientRect();
+      const rect = table.getBoundingClientRect();
+      setTop(rect.top + rect.height);
+      setLeft(rect.left + rect.width / 2);
+    };
 
-      setTop(tableRect.top + tableRect.height);
-      setLeft(tableRect.left + tableRect.width / 2);
-    });
-
+    editor.on("selectionUpdate", updatePosition);
+    editor.on("update", updatePosition);
     return () => {
-      editor.off("selectionUpdate");
+      editor.off("selectionUpdate", updatePosition);
+      editor.off("update", updatePosition);
     };
   }, [editor]);
+
+  const visible = isActive && top && left;
 
   return (
     <div
       className={cn(
         "-translate-x-1/2 absolute flex translate-y-1/2 items-center rounded-full border bg-background shadow-xl",
-        {
-          hidden: !(left || top),
-        }
+        { hidden: !visible }
       )}
       style={{ top, left }}
     >
@@ -1480,45 +1479,46 @@ export const EditorTableColumnMenu = ({
   children,
 }: EditorTableColumnMenuProps) => {
   const { editor } = useCurrentEditor();
-  const [top, setTop] = useState(0);
-  const [left, setLeft] = useState(0);
+  const [visible, setVisible] = useState(false);
+  const [position, setPosition] = useState({ top: 0, left: 0 });
 
   useEffect(() => {
-    if (!editor) {
-      return;
-    }
+    if (!editor) return;
 
-    editor.on("selectionUpdate", () => {
+    const updateMenu = () => {
       const selection = window.getSelection();
+      const range = selection?.rangeCount ? selection.getRangeAt(0) : null;
+      const el =
+        range?.startContainer instanceof HTMLElement
+          ? range.startContainer
+          : range?.startContainer.parentElement;
 
-      if (!selection) {
+      const table = el?.closest("table");
+      if (!table) {
+        setVisible(false);
         return;
       }
 
-      const range = selection.getRangeAt(0);
-      let startContainer = range.startContainer as HTMLElement | string;
+      const rect = table.getBoundingClientRect();
+      setPosition({
+        top: rect.top + rect.height,
+        left: rect.left + rect.width / 2,
+      });
+      setVisible(true);
+    };
 
-      if (!(startContainer instanceof HTMLElement)) {
-        startContainer = range.startContainer.parentElement as HTMLElement;
-      }
+    editor.on("selectionUpdate", updateMenu);
+    editor.on("update", updateMenu);
 
-      // Get the closest table cell (td or th)
-      const tableCell = startContainer.closest("td, th");
-
-      if (!tableCell) {
-        return;
-      }
-
-      const cellRect = tableCell.getBoundingClientRect();
-
-      setTop(cellRect.top);
-      setLeft(cellRect.left + cellRect.width / 2);
-    });
+    updateMenu();
 
     return () => {
-      editor.off("selectionUpdate");
+      editor.off("selectionUpdate", updateMenu);
+      editor.off("update", updateMenu);
     };
   }, [editor]);
+
+  if (!visible) return null;
 
   return (
     <DropdownMenu>
@@ -1527,10 +1527,10 @@ export const EditorTableColumnMenu = ({
         className={cn(
           "-translate-x-1/2 -translate-y-1/2 absolute flex h-4 w-7 overflow-hidden rounded-md border bg-background shadow-xl",
           {
-            hidden: !(left || top),
+            hidden: !(position.left || position.top),
           }
         )}
-        style={{ top, left }}
+        style={{ top: position.top, left: position.left }}
       >
         <Button size="icon" variant="ghost">
           <EllipsisIcon className="text-muted-foreground" size={16} />
@@ -1547,44 +1547,47 @@ export type EditorTableRowMenuProps = {
 
 export const EditorTableRowMenu = ({ children }: EditorTableRowMenuProps) => {
   const { editor } = useCurrentEditor();
+  const [visible, setVisible] = useState(false);
   const [top, setTop] = useState(0);
   const [left, setLeft] = useState(0);
 
   useEffect(() => {
-    if (!editor) {
-      return;
-    }
+    if (!editor) return;
 
-    editor.on("selectionUpdate", () => {
+    const updateMenu = () => {
       const selection = window.getSelection();
-
-      if (!selection) {
-        return;
-      }
-
-      const range = selection.getRangeAt(0);
-      let startContainer = range.startContainer as HTMLElement | string;
+      const range = selection?.rangeCount ? selection.getRangeAt(0) : null;
+      let startContainer = range?.startContainer as HTMLElement | null;
 
       if (!(startContainer instanceof HTMLElement)) {
-        startContainer = range.startContainer.parentElement as HTMLElement;
+        startContainer = range?.startContainer
+          .parentElement as HTMLElement | null;
       }
 
-      const tableRow = startContainer.closest("tr");
-
+      const tableRow = startContainer?.closest("tr");
       if (!tableRow) {
+        setVisible(false);
         return;
       }
 
       const rowRect = tableRow.getBoundingClientRect();
-
       setTop(rowRect.top + rowRect.height / 2);
       setLeft(rowRect.left);
-    });
+      setVisible(true);
+    };
+
+    editor.on("selectionUpdate", updateMenu);
+    editor.on("update", updateMenu);
+
+    updateMenu();
 
     return () => {
-      editor.off("selectionUpdate");
+      editor.off("selectionUpdate", updateMenu);
+      editor.off("update", updateMenu);
     };
   }, [editor]);
+
+  if (!visible) return null;
 
   return (
     <DropdownMenu>

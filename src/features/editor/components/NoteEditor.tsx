@@ -8,6 +8,37 @@ import {
   EditorFormatBold,
   EditorNodeBulletList,
   EditorNodeQuote,
+  EditorNodeCode,
+  EditorNodeTable,
+  EditorSelector,
+  EditorNodeHeading2,
+  EditorNodeOrderedList,
+  EditorNodeHeading3,
+  EditorFormatUnderline,
+  EditorFormatItalic,
+  EditorNodeTaskList,
+  EditorFormatStrike,
+  EditorFormatCode,
+  EditorFormatSuperscript,
+  EditorFormatSubscript,
+  EditorLinkSelector,
+  EditorClearFormatting,
+  EditorTableMenu,
+  EditorTableColumnMenu,
+  EditorTableColumnBefore,
+  EditorTableColumnAfter,
+  EditorTableColumnDelete,
+  EditorTableRowBefore,
+  EditorTableRowMenu,
+  EditorTableRowDelete,
+  EditorTableRowAfter,
+  // EditorTableGlobalMenu,
+  // EditorTableHeaderColumnToggle,
+  // EditorTableHeaderRowToggle,
+  // EditorTableDelete,
+  // EditorTableMergeCells,
+  // EditorTableSplitCell,
+  // EditorTableFix,
 } from "@/components/ui/shadcn-io/editor";
 import type { JSONContent, Editor } from "@/components/ui/shadcn-io/editor";
 
@@ -32,12 +63,55 @@ export default function NoteEditor({ value, onChange }: Props) {
         <EditorNodeHeading1 hideName />
         <EditorNodeBulletList hideName />
         <EditorNodeQuote hideName />
+        <EditorNodeCode hideName />
+        <EditorNodeTable hideName />
       </EditorFloatingMenu>
 
       <EditorBubbleMenu>
-        <EditorNodeText />
-        <EditorFormatBold />
+        <EditorSelector title="Text">
+          <EditorNodeText />
+          <EditorNodeHeading1 />
+          <EditorNodeHeading2 />
+          <EditorNodeHeading3 />
+          <EditorNodeBulletList />
+          <EditorNodeOrderedList />
+          <EditorNodeTaskList />
+          <EditorNodeQuote />
+          <EditorNodeCode />
+        </EditorSelector>
+        <EditorSelector title="Format">
+          <EditorFormatBold />
+          <EditorFormatItalic />
+          <EditorFormatUnderline />
+          <EditorFormatStrike />
+          <EditorFormatCode />
+          <EditorFormatSuperscript />
+          <EditorFormatSubscript />
+        </EditorSelector>
+        <EditorLinkSelector />
+        <EditorClearFormatting />
       </EditorBubbleMenu>
+      <EditorTableMenu>
+        <EditorTableColumnMenu>
+          <EditorTableColumnBefore />
+          <EditorTableColumnAfter />
+          <EditorTableColumnDelete />
+        </EditorTableColumnMenu>
+        <EditorTableRowMenu>
+          <EditorTableRowBefore />
+          <EditorTableRowAfter />
+          <EditorTableRowDelete />
+        </EditorTableRowMenu>
+        {/* 
+        <EditorTableGlobalMenu>
+          <EditorTableHeaderColumnToggle />
+          <EditorTableHeaderRowToggle />
+          <EditorTableDelete />
+          <EditorTableMergeCells />
+          <EditorTableSplitCell />
+          <EditorTableFix />
+        </EditorTableGlobalMenu> */}
+      </EditorTableMenu>
     </EditorProvider>
   );
 }
