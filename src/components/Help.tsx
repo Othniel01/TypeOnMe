@@ -31,7 +31,8 @@ export function Help() {
           <DialogHeader>
             <DialogTitle>Help</DialogTitle>
             <DialogDescription>
-              List of all the commands to help you get started
+              List of all the commands to help you get started. <br /> Use / to
+              open text commands.
             </DialogDescription>
           </DialogHeader>
           <div className="flex flex-col gap-3">

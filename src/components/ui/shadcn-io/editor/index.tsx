@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 "use client";
 
 import type { Editor, Range } from "@tiptap/core";
@@ -735,9 +736,6 @@ export const EditorFloatingMenu = ({
   <FloatingMenu
     className={cn("flex items-center bg-secondary", className)}
     editor={null}
-    tippyOptions={{
-      offset: [32, 0],
-    }}
     {...props}
   />
 );
@@ -748,34 +746,39 @@ export const EditorBubbleMenu = ({
   className,
   children,
   ...props
-}: EditorBubbleMenuProps) => (
-  <BubbleMenu
-    className={cn(
-      "flex rounded-xl border bg-background p-0.5 shadow",
-      "[&>*:first-child]:rounded-l-[9px]",
-      "[&>*:last-child]:rounded-r-[9px]",
-      className
-    )}
-    editor={null}
-    tippyOptions={{
-      maxWidth: "none",
-    }}
-    {...props}
-  >
-    {children && Array.isArray(children)
-      ? children.reduce((acc: ReactNode[], child, index) => {
-          if (index === 0) {
-            return [child];
-          }
+}: EditorBubbleMenuProps) => {
+  const { editor } = useCurrentEditor();
 
-          // biome-ignore lint/suspicious/noArrayIndexKey: "only iterator we have"
-          acc.push(<Separator key={index} orientation="vertical" />);
-          acc.push(child);
-          return acc;
-        }, [])
-      : children}
-  </BubbleMenu>
-);
+  if (!editor) {
+    return null;
+  }
+
+  return (
+    <BubbleMenu
+      className={cn(
+        "flex rounded-xl border bg-background p-0.5 shadow",
+        "[&>*:first-child]:rounded-l-[9px]",
+        "[&>*:last-child]:rounded-r-[9px]",
+        className
+      )}
+      editor={editor}
+      {...props}
+    >
+      {children && Array.isArray(children)
+        ? children.reduce((acc: ReactNode[], child, index) => {
+            if (index === 0) {
+              return [child];
+            }
+
+            // biome-ignore lint/suspicious/noArrayIndexKey: "only iterator we have"
+            acc.push(<Separator key={index} orientation="vertical" />);
+            acc.push(child);
+            return acc;
+          }, [])
+        : children}
+    </BubbleMenu>
+  );
+};
 
 type EditorButtonProps = {
   name: string;
@@ -1259,7 +1262,6 @@ export const EditorFormatUnderline = ({
 
   return (
     <BubbleMenuButton
-      // @ts-expect-error "TipTap extensions are not typed"
       command={() => editor.chain().focus().toggleUnderline().run()}
       hideName={hideName}
       icon={UnderlineIcon}
@@ -1320,7 +1322,6 @@ export const EditorLinkSelector = ({
     const href = getUrlFromString(url);
 
     if (href) {
-      // @ts-expect-error "TipTap extensions are not typed"
       editor.chain().focus().setLink({ href }).run();
       onOpenChange?.(false);
     }
@@ -1365,7 +1366,6 @@ export const EditorLinkSelector = ({
             <Button
               className="flex h-8 items-center rounded-sm p-1 text-destructive transition-all hover:bg-destructive-foreground dark:hover:bg-destructive"
               onClick={() => {
-                // @ts-expect-error "TipTap extensions are not typed"
                 editor.chain().focus().unsetLink().run();
                 onOpenChange?.(false);
               }}
@@ -1931,6 +1931,7 @@ export type EditorCharacterCountProps = {
   className?: string;
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const EditorCharacterCount = {
   Characters({ children, className }: EditorCharacterCountProps) {
     const { editor } = useCurrentEditor();
