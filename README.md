@@ -1,5 +1,8 @@
 # TypeOnMe: A Powerful Textarea
 
+<img width="1919" height="911" alt="image" src="https://github.com/user-attachments/assets/01cc15fd-4dd9-4443-b0be-7161e5897715" />
+
+
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
 Currently, two official plugins are available:
