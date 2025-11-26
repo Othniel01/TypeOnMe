@@ -5,14 +5,16 @@ import {
 } from "@/components/ui/shadcn-io/status";
 import { DropDown } from "@/components/DropDown";
 import DateTimeStamp from "./DateTimeStamp";
+import { Help } from "@/components/Help";
 
 export default function NavBar() {
   return (
     <>
       <div className="absolute z-20 bg-[#f2f2f2] dark:bg-[#1c1c22f2] items-center flex gap-1 px-4 top-2 right-7">
+        <Help />
         <Status
           className="rounded-full dark:bg-[#1c1c22f2] bg-[#f2f2f2] font-normal text-xs"
-          status="maintenance"
+          status="online"
         >
           <StatusIndicator />
           <StatusLabel />

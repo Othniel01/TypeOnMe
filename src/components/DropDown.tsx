@@ -14,7 +14,7 @@ import {
   getCommands,
   type CommandItem as CmdItem,
 } from "@/core/commands/commands";
-import { ThemeToggle } from "./ThemeToggle";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 export function DropDown() {
   const addNote = useNotesStore((s) => s.addNote);
@@ -80,7 +80,7 @@ export function DropDown() {
               Github
             </DropdownMenuItem>
           </a>
-          {/* <DropdownMenuItem className="cursor-pointer">Help</DropdownMenuItem> */}
+
           <DropdownMenuItem>
             <ThemeToggle />
           </DropdownMenuItem>
