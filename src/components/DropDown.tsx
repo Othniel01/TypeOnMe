@@ -75,8 +75,12 @@ export function DropDown() {
         <DropdownMenuSeparator />
 
         <DropdownMenuGroup>
-          <a target="blank" href="https://github.com/Othniel01/TypeOnMe">
-            <DropdownMenuItem className="cursor-pointer">
+          <a
+            target="blank"
+            className=""
+            href="https://github.com/Othniel01/TypeOnMe"
+          >
+            <DropdownMenuItem className="cursor-pointer ">
               ⭐Github
             </DropdownMenuItem>
           </a>

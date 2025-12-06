@@ -57,7 +57,7 @@ export default function NoteEditor({ value, onChange }: Props) {
       content={value}
       onUpdate={handleUpdate}
       placeholder="Click Here..."
-      className="w-full h-full overflow-y-auto"
+      className="w-full h-full overflow-y-auto tiptap-content"
     >
       <EditorFloatingMenu>
         <EditorNodeHeading1 hideName />
