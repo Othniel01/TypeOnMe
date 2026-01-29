@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { MoreHorizontalIcon } from "lucide-react";
 import { useNotesStore } from "@/store/useNotesStore";
+import { useUIStore } from "@/store/useUiStore";
 import {
   getCommands,
   type CommandItem as CmdItem,
@@ -19,6 +20,8 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 export function DropDown() {
   const addNote = useNotesStore((s) => s.addNote);
   const notes = useNotesStore((s) => s.notes);
+  const narrowLayout = useUIStore((s) => s.narrowLayout);
+  const toggleNarrowLayout = useUIStore((s) => s.toggleNarrowLayout);
 
   const commands: CmdItem[] = getCommands("@", notes);
 
@@ -69,6 +72,11 @@ export function DropDown() {
           <DropdownMenuItem className="cursor-pointer" onClick={handleNew}>
             New
             <DropdownMenuShortcut>Alt+N</DropdownMenuShortcut>
+          </DropdownMenuItem>
+
+          <DropdownMenuItem className="cursor-pointer" onClick={toggleNarrowLayout}>
+            {narrowLayout ? "Wide Layout" : "Narrow Layout"}
+            <DropdownMenuShortcut>Alt+S</DropdownMenuShortcut>
           </DropdownMenuItem>
         </DropdownMenuGroup>
 

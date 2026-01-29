@@ -2,11 +2,13 @@ import { useEffect, useState } from "react";
 import NavBar from "@/components/NavBar";
 import NoteEditor from "@/features/editor/components/NoteEditor";
 import { useNotesStore } from "@/store/useNotesStore";
+import { useUIStore } from "@/store/useUiStore";
 import { EMPTY_DOC } from "@/lib/constants";
 import { CommandPalette } from "@/components/CommandPallete";
 import "./styles/global.css";
 import { ShortcutsListener } from "@/core/shortcuts/ShortcutListener";
 import { Spinner } from "./components/ui/spinner";
+import { cn } from "@/lib/utils";
 
 function App() {
   const notes = useNotesStore((s) => s.notes);
@@ -15,6 +17,8 @@ function App() {
   const loadNotes = useNotesStore((s) => s.loadNotes);
   const selectNote = useNotesStore((s) => s.selectNote);
   const addNote = useNotesStore((s) => s.addNote);
+
+  const narrowLayout = useUIStore((s) => s.narrowLayout);
 
   const [loading, setLoading] = useState(true);
 
@@ -50,12 +54,17 @@ function App() {
     <>
       {" "}
       <ShortcutsListener />
-      <div className="bg-[#f2f2f2]  dark:bg-[#1c1c22f2] relative w-full h-screen">
+      <div className="bg-[#f0f0f0]  dark:bg-[#1c1c22f2] relative w-full h-screen">
         <NavBar />
         <div className="absolute">
           <CommandPalette />
         </div>
-        <div className="p-4 h-full text-sm w-full">
+        <div
+          className={cn(
+            "p-4 h-full text-sm transition-all duration-300",
+            narrowLayout ? "max-w-2xl mx-auto" : "w-full",
+          )}
+        >
           <NoteEditor
             key={note.id}
             value={note.content ?? EMPTY_DOC}

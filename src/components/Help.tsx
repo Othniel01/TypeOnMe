@@ -48,6 +48,10 @@ export function Help() {
               <h2 className="text-sm ">Next Note</h2>
               <p className="text-[#858585]">Alt+ArrowDown</p>
             </div>
+            <div className="bg-muted flex justify-between text-xs  py-5 rounded-md px-4">
+              <h2 className="text-sm ">Toggle Narrow Layout</h2>
+              <p className="text-[#858585]">Alt+S</p>
+            </div>
           </div>
         </DialogContent>
       </Dialog>

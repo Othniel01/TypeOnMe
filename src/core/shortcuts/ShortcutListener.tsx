@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { shortcutsMap } from "@/core/shortcuts/shortcuts";
 import { useNotesStore } from "@/store/useNotesStore";
+import { useUIStore } from "@/store/useUiStore";
 import { getCommands } from "@/core/commands/commands";
 
 export function ShortcutsListener() {
@@ -25,6 +26,10 @@ export function ShortcutsListener() {
       switch (commandId) {
         case "new_note":
           useNotesStore.getState().addNote();
+          break;
+
+        case "toggle_narrow_layout":
+          useUIStore.getState().toggleNarrowLayout();
           break;
 
         // case "delete_note":

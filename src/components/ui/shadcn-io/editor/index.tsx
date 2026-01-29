@@ -1479,57 +1479,65 @@ export const EditorTableColumnMenu = ({
   children,
 }: EditorTableColumnMenuProps) => {
   const { editor } = useCurrentEditor();
-  const [visible, setVisible] = useState(false);
   const [position, setPosition] = useState({ top: 0, left: 0 });
+
+  const isInTable = editor?.isActive("table") ?? false;
 
   useEffect(() => {
     if (!editor) return;
 
     const updateMenu = () => {
-      const selection = window.getSelection();
-      const range = selection?.rangeCount ? selection.getRangeAt(0) : null;
-      const el =
-        range?.startContainer instanceof HTMLElement
-          ? range.startContainer
-          : range?.startContainer.parentElement;
-
-      const table = el?.closest("table");
-      if (!table) {
-        setVisible(false);
+      if (!editor.isActive("table")) {
+        setPosition({ top: 0, left: 0 });
         return;
       }
 
-      const rect = table.getBoundingClientRect();
-      setPosition({
-        top: rect.top + rect.height,
-        left: rect.left + rect.width / 2,
-      });
-      setVisible(true);
+      // Use editor's view to get DOM position
+      const { state, view } = editor;
+      const { from } = state.selection;
+
+      try {
+        const domAtPos = view.domAtPos(from);
+        const node = domAtPos.node;
+        const el =
+          node instanceof HTMLElement ? node : node.parentElement;
+        const table = el?.closest("table");
+
+        if (!table) {
+          setPosition({ top: 0, left: 0 });
+          return;
+        }
+
+        const rect = table.getBoundingClientRect();
+        setPosition({
+          top: rect.top + rect.height,
+          left: rect.left + rect.width / 2,
+        });
+      } catch {
+        setPosition({ top: 0, left: 0 });
+      }
     };
 
     editor.on("selectionUpdate", updateMenu);
     editor.on("update", updateMenu);
+    editor.on("focus", updateMenu);
 
     updateMenu();
 
     return () => {
       editor.off("selectionUpdate", updateMenu);
       editor.off("update", updateMenu);
+      editor.off("focus", updateMenu);
     };
   }, [editor]);
 
-  if (!visible) return null;
+  if (!isInTable || (!position.left && !position.top)) return null;
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
         asChild
-        className={cn(
-          "-translate-x-1/2 -translate-y-1/2 absolute flex h-4 w-7 overflow-hidden rounded-md border bg-background shadow-xl",
-          {
-            hidden: !(position.left || position.top),
-          }
-        )}
+        className="-translate-x-1/2 -translate-y-1/2 fixed flex h-4 w-7 overflow-hidden rounded-md border bg-background shadow-xl"
         style={{ top: position.top, left: position.left }}
       >
         <Button size="icon" variant="ghost">
@@ -1547,58 +1555,67 @@ export type EditorTableRowMenuProps = {
 
 export const EditorTableRowMenu = ({ children }: EditorTableRowMenuProps) => {
   const { editor } = useCurrentEditor();
-  const [visible, setVisible] = useState(false);
   const [top, setTop] = useState(0);
   const [left, setLeft] = useState(0);
+
+  const isInTable = editor?.isActive("table") ?? false;
 
   useEffect(() => {
     if (!editor) return;
 
     const updateMenu = () => {
-      const selection = window.getSelection();
-      const range = selection?.rangeCount ? selection.getRangeAt(0) : null;
-      let startContainer = range?.startContainer as HTMLElement | null;
-
-      if (!(startContainer instanceof HTMLElement)) {
-        startContainer = range?.startContainer
-          .parentElement as HTMLElement | null;
-      }
-
-      const tableRow = startContainer?.closest("tr");
-      if (!tableRow) {
-        setVisible(false);
+      if (!editor.isActive("table")) {
+        setTop(0);
+        setLeft(0);
         return;
       }
 
-      const rowRect = tableRow.getBoundingClientRect();
-      setTop(rowRect.top + rowRect.height / 2);
-      setLeft(rowRect.left);
-      setVisible(true);
+      // Use editor's view to get DOM position
+      const { state, view } = editor;
+      const { from } = state.selection;
+
+      try {
+        const domAtPos = view.domAtPos(from);
+        const node = domAtPos.node;
+        const el =
+          node instanceof HTMLElement ? node : node.parentElement;
+        const tableRow = el?.closest("tr");
+
+        if (!tableRow) {
+          setTop(0);
+          setLeft(0);
+          return;
+        }
+
+        const rowRect = tableRow.getBoundingClientRect();
+        setTop(rowRect.top + rowRect.height / 2);
+        setLeft(rowRect.left);
+      } catch {
+        setTop(0);
+        setLeft(0);
+      }
     };
 
     editor.on("selectionUpdate", updateMenu);
     editor.on("update", updateMenu);
+    editor.on("focus", updateMenu);
 
     updateMenu();
 
     return () => {
       editor.off("selectionUpdate", updateMenu);
       editor.off("update", updateMenu);
+      editor.off("focus", updateMenu);
     };
   }, [editor]);
 
-  if (!visible) return null;
+  if (!isInTable || (!left && !top)) return null;
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
-          className={cn(
-            "-translate-x-1/2 -translate-y-1/2 absolute flex h-7 w-4 overflow-hidden rounded-md border bg-background shadow-xl",
-            {
-              hidden: !(left || top),
-            }
-          )}
+          className="-translate-x-1/2 -translate-y-1/2 fixed flex h-7 w-4 overflow-hidden rounded-md border bg-background shadow-xl"
           size="icon"
           style={{ top, left }}
           variant="ghost"

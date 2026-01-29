@@ -6,4 +6,5 @@ export const shortcutsMap: Record<string, string> = {
   //   "Alt+D": "delete_note",
   "Alt+ArrowUp": "prev_note",
   "Alt+ArrowDown": "next_note",
+  "Alt+S": "toggle_narrow_layout",
 };
