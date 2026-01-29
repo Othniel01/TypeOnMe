@@ -111,7 +111,7 @@ interface SlashNodeAttrs {
 
 type SlashOptions<
   SlashOptionSuggestionItem = unknown,
-  Attrs = SlashNodeAttrs
+  Attrs = SlashNodeAttrs,
 > = {
   HTMLAttributes: Record<string, unknown>;
   renderText: (props: {
@@ -376,7 +376,7 @@ const Slash = Node.create<SlashOptions>({
     mergedOptions.HTMLAttributes = mergeAttributes(
       { "data-type": this.name },
       this.options.HTMLAttributes,
-      HTMLAttributes
+      HTMLAttributes,
     );
     const html = this.options.renderHTML({
       options: mergedOptions,
@@ -389,7 +389,7 @@ const Slash = Node.create<SlashOptions>({
         mergeAttributes(
           { "data-type": this.name },
           this.options.HTMLAttributes,
-          HTMLAttributes
+          HTMLAttributes,
         ),
         html,
       ];
@@ -424,7 +424,7 @@ const Slash = Node.create<SlashOptions>({
                   ? ""
                   : this.options.suggestion.char || "",
                 pos,
-                pos + node.nodeSize
+                pos + node.nodeSize,
               );
 
               return false;
@@ -501,7 +501,7 @@ const handleCommandNavigation = (event: KeyboardEvent) => {
           key: event.key,
           cancelable: true,
           bubbles: true,
-        })
+        }),
       );
 
       return true;
@@ -589,7 +589,7 @@ export const EditorProvider = ({
           "[&_.hljs-emphasis]:text-[#24292e] [&_.hljs-emphasis]:italic",
           "[&_.hljs-strong]:font-bold [&_.hljs-strong]:text-[#24292e]",
           "[&_.hljs-addition]:bg-[#f0fff4] [&_.hljs-addition]:text-[#22863a]",
-          "[&_.hljs-deletion]:bg-[#ffeef0] [&_.hljs-deletion]:text-[#b31d28]"
+          "[&_.hljs-deletion]:bg-[#ffeef0] [&_.hljs-deletion]:text-[#b31d28]",
         ),
       },
     }),
@@ -669,7 +669,7 @@ export const EditorProvider = ({
     Table.configure({
       HTMLAttributes: {
         class: cn(
-          "relative m-0 mx-auto my-3 w-full table-fixed border-collapse overflow-hidden rounded-none text-sm"
+          "relative m-0 mx-auto my-3 w-full table-fixed border-collapse overflow-hidden rounded-none text-sm",
         ),
       },
       allowTableNodeSelection: true,
@@ -677,27 +677,26 @@ export const EditorProvider = ({
     TableRow.configure({
       HTMLAttributes: {
         class: cn(
-          "relative box-border min-w-[1em] border p-1 text-start align-top"
+          "relative box-border min-w-[1em] border p-1 text-start align-top",
         ),
       },
     }),
     TableCell.configure({
       HTMLAttributes: {
         class: cn(
-          "relative box-border min-w-[1em] border p-1 text-start align-top"
+          "relative box-border min-w-[1em] border p-1 text-start align-top",
         ),
       },
     }),
     TableHeader.configure({
       HTMLAttributes: {
         class: cn(
-          "relative box-border min-w-[1em] border bg-secondary p-1 text-start align-top font-medium font-semibold text-muted-foreground"
+          "relative box-border min-w-[1em] border bg-secondary p-1 text-start align-top font-medium font-semibold text-muted-foreground",
         ),
       },
     }),
     TaskList.configure({
       HTMLAttributes: {
-        // 17px = the width of the checkbox + the gap between the checkbox and the text
         class: "before:translate-x-[17px]",
       },
     }),
@@ -759,7 +758,7 @@ export const EditorBubbleMenu = ({
         "flex rounded-xl border bg-background p-0.5 shadow",
         "[&>*:first-child]:rounded-l-[9px]",
         "[&>*:last-child]:rounded-r-[9px]",
-        className
+        className,
       )}
       editor={editor}
       {...props}
@@ -770,7 +769,6 @@ export const EditorBubbleMenu = ({
               return [child];
             }
 
-            // biome-ignore lint/suspicious/noArrayIndexKey: "only iterator we have"
             acc.push(<Separator key={index} orientation="vertical" />);
             acc.push(child);
             return acc;
@@ -848,7 +846,6 @@ export const EditorNodeText = ({
         editor.chain().focus().toggleNode("paragraph", "paragraph").run()
       }
       hideName={hideName}
-      // I feel like there has to be a more efficient way to do this – feel free to PR if you know how!
       icon={TextIcon}
       isActive={() =>
         (editor &&
@@ -1343,7 +1340,7 @@ export const EditorLinkSelector = ({
               "text-xs underline decoration-text-muted underline-offset-4",
               {
                 "text-primary": editor.isActive("link"),
-              }
+              },
             )}
           >
             Link
@@ -1462,7 +1459,7 @@ export const EditorTableGlobalMenu = ({
     <div
       className={cn(
         "-translate-x-1/2 absolute flex translate-y-1/2 items-center rounded-full border bg-background shadow-xl",
-        { hidden: !visible }
+        { hidden: !visible },
       )}
       style={{ top, left }}
     >
@@ -1499,8 +1496,7 @@ export const EditorTableColumnMenu = ({
       try {
         const domAtPos = view.domAtPos(from);
         const node = domAtPos.node;
-        const el =
-          node instanceof HTMLElement ? node : node.parentElement;
+        const el = node instanceof HTMLElement ? node : node.parentElement;
         const table = el?.closest("table");
 
         if (!table) {
@@ -1577,8 +1573,7 @@ export const EditorTableRowMenu = ({ children }: EditorTableRowMenuProps) => {
       try {
         const domAtPos = view.domAtPos(from);
         const node = domAtPos.node;
-        const el =
-          node instanceof HTMLElement ? node : node.parentElement;
+        const el = node instanceof HTMLElement ? node : node.parentElement;
         const tableRow = el?.closest("tr");
 
         if (!tableRow) {
@@ -1964,7 +1959,7 @@ export const EditorCharacterCount = {
       <div
         className={cn(
           "absolute right-4 bottom-4 rounded-md border bg-background p-2 text-muted-foreground text-sm shadow",
-          className
+          className,
         )}
       >
         {children}
@@ -1984,7 +1979,7 @@ export const EditorCharacterCount = {
       <div
         className={cn(
           "absolute right-4 bottom-4 rounded-md border bg-background p-2 text-muted-foreground text-sm shadow",
-          className
+          className,
         )}
       >
         {children}
